@@ -25,15 +25,14 @@ const childBlock = document.querySelector(".child_block");
 
 const centerX = parentBlock.offsetWidth / 2 - childBlock.offsetWidth / 2;
 const centerY = parentBlock.offsetHeight / 2 - childBlock.offsetHeight / 2;
-const radius = Math.min(centerX, centerY) - 10; // Радиус круга с небольшим отступом
+const radius = Math.min(centerX, centerY) - 10;
 
 let angle = 0;
-const speed = 0.02; // Скорость вращения (угловое смещение)
+const speed = 0.02;
 
 const moveBlock = () => {
   angle += speed;
 
-  // Вычисляем новые координаты
   const positionX = centerX + radius * Math.cos(angle);
   const positionY = centerY + radius * Math.sin(angle);
 
