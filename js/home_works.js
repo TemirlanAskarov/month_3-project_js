@@ -20,15 +20,76 @@ gmailBtn.addEventListener("click", function () {
 
 /// MOVE BLOCK
 
-const redBlock = document.querySelector(".child_block");
-let moveX = 0;
+const parentBlock = document.querySelector(".parent_block");
+const childBlock = document.querySelector(".child_block");
 
-const MoveBlock = () => {
-  moveX++;
-  if (moveX <= 449) {
-    redBlock.style.left = `${moveX}px`;
-    requestAnimationFrame(MoveBlock);
-  }
+const centerX = parentBlock.offsetWidth / 2 - childBlock.offsetWidth / 2;
+const centerY = parentBlock.offsetHeight / 2 - childBlock.offsetHeight / 2;
+const radius = Math.min(centerX, centerY) - 10; // Радиус круга с небольшим отступом
+
+let angle = 0;
+const speed = 0.02; // Скорость вращения (угловое смещение)
+
+const moveBlock = () => {
+  angle += speed;
+
+  // Вычисляем новые координаты
+  const positionX = centerX + radius * Math.cos(angle);
+  const positionY = centerY + radius * Math.sin(angle);
+
+  childBlock.style.left = `${positionX}px`;
+  childBlock.style.top = `${positionY}px`;
+
+  requestAnimationFrame(moveBlock);
 };
 
-MoveBlock();
+moveBlock();
+
+/// TIMER
+
+const getMinutes = document.querySelector("#minutes");
+const getSeconds = document.querySelector("#seconds");
+const startBtn = document.querySelector("#start");
+const stoptBtn = document.querySelector("#stop");
+const resetBtn = document.querySelector("#reset");
+
+let minutes = 0;
+let seconds = 0;
+let interval;
+
+const startTimer = () => {
+  seconds++;
+  if (seconds <= 9) {
+    getSeconds.innerHTML = "0" + seconds;
+  }
+  if (seconds > 9) {
+    getSeconds.innerHTML = seconds;
+  }
+  if (seconds > 60) {
+    minutes++;
+    getMinutes.innerHTML = "0" + minutes;
+    seconds = 0;
+    getSeconds.innerHTML = "0" + 0;
+  }
+  if (minutes > 9) {
+    getMinutes.innerHTML = seconds;
+  }
+  startBtn.disabled = true;
+};
+
+startBtn.addEventListener("click", () => {
+  interval = setInterval(startTimer, 100);
+});
+
+stoptBtn.addEventListener("click", () => {
+  clearInterval(interval);
+  startBtn.disabled = false;
+});
+resetBtn.addEventListener("click", () => {
+  clearInterval(interval);
+  minutes = "0";
+  seconds = "0";
+  getMinutes.innerHTML = minutes;
+  getSeconds.innerHTML = seconds;
+  startBtn.disabled = false;
+});
