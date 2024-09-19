@@ -42,3 +42,41 @@ tabContentItemParent.onclick = (event) => {
     });
   }
 };
+
+//////// CONVERTER
+
+const somInput = document.querySelector("#som");
+const usdInput = document.querySelector("#usd");
+const eurInput = document.querySelector("#eur");
+
+const converter = (element, targetElem1, targetEleme2) => {
+  element.oninput = () => {
+    const request = new XMLHttpRequest();
+    request.open("GET", "../data/converter.json");
+    request.setRequestHeader("Content-type", "application/json");
+    request.send();
+
+    request.onload = () => {
+      const data = JSON.parse(request.response);
+      if (element.id === "som") {
+        targetElem1.value = (element.value / data.usd).toFixed(2);
+        targetEleme2.value = (element.value / data.eur).toFixed(2);
+      } else if (element.id === "usd") {
+        targetElem1.value = (element.value * data.usd).toFixed(2);
+        targetEleme2.value = ((element.value * data.usd) / data.eur).toFixed(2);
+      } else if (element.id === "eur") {
+        targetElem1.value = (element.value / data.eur).toFixed(2);
+        targetEleme2.value = ((element.value * data.eur) / data.usd).toFixed(2);
+      } else if (element === "") {
+        targetElem1.value = "";
+        targetEleme2.value = "";
+      }
+    };
+  };
+};
+
+converter(somInput, usdInput, eurInput);
+converter(usdInput, somInput, eurInput);
+converter(eurInput, somInput, usdInput);
+
+// KISS - keep it simple stypid
