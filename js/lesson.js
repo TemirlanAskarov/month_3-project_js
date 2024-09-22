@@ -3,7 +3,7 @@
 const tabContentBlocks = document.querySelectorAll(".tab_content_block");
 const tabContentItems = document.querySelectorAll(".tab_content_item");
 const tabContentItemParent = document.querySelector(".tab_content_items");
-let currentTab = 0; // Используем let, чтобы иметь возможность изменять значение
+let currentTab = 0;
 
 const hideTabContent = () => {
   tabContentBlocks.forEach((block) => {
@@ -79,4 +79,55 @@ converter(somInput, usdInput, eurInput);
 converter(usdInput, somInput, eurInput);
 converter(eurInput, somInput, usdInput);
 
-// KISS - keep it simple stypid
+/// CARD SWITCHER
+
+const card = document.querySelector(".card");
+const btnNext = document.querySelector("#btn-next");
+const btnPrev = document.querySelector("#btn-prev");
+
+let cardId = 0;
+
+const requestTodos = (cardId = 0) => {
+  cardId++;
+  fetch(`https://jsonplaceholder.typicode.com/todos/${cardId}`)
+    .then((responce) => responce.json())
+    .then((data) => {
+      card.innerHTML = `
+       <p>${data.title}</p>
+       <p style="color: ${data.completed ? "green" : "red"} ">${
+        data.completed
+      }</p>
+       <span>${data.id}</span>
+       
+       `;
+    });
+};
+
+btnNext.onclick = () => {
+  if (cardId === 199) {
+    cardId = 0;
+  } else {
+    cardId++;
+  }
+  requestTodos(cardId);
+};
+
+btnPrev.onclick = () => {
+  if (cardId === 0) {
+    cardId = 199;
+  } else {
+    cardId--;
+  }
+  requestTodos(cardId);
+};
+
+requestTodos();
+
+////// Request on posts
+const requestPosts = () => {
+  fetch("https://jsonplaceholder.typicode.com/posts")
+    .then((responce) => responce.json())
+    .then((data) => console.log(data));
+};
+
+requestPosts();
